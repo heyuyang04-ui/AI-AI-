@@ -21,7 +21,7 @@
 pfcctl status --json
 ```
 
-返回值至少包含：
+完整遥测返回值至少包含：
 
 ```json
 {
@@ -40,6 +40,10 @@ pfcctl status --json
   "gateway": {"command_status": "idle", "reject_reason": "none"}
 }
 ```
+
+UART v1 过渡阶段允许返回 `telemetry_complete=false`，缺失的 AC/母线电压、
+温度和独立输出使能字段必须为 `null`。此时仍可依据真实状态/故障请求安全停机，
+但不得据此宣布“正常”、请求降额或推测缺失值。
 
 允许的执行命令仅有：
 
@@ -84,12 +88,15 @@ LLC 故障位：
 ## How to use
 
 1. 调用 `run_shell` 执行 `pfcctl status --json`。
-2. 验证 `valid=true`、`age_ms<=1500`，并确认全部必需字段存在且为有限数值。
+2. 验证 `valid=true`、`age_ms<=1500`，并确认状态、故障字段存在。若
+   `telemetry_complete=true`，再确认全部测量字段为有限数值；若为 `false`，
+   进入“受限遥测”模式。
 3. 解码 PFC 和 LLC 状态、所有故障位，先处理最高安全等级事件。
 4. 按以下顺序决策：
    - 遥测无效或 `age_ms>1500`：执行 `pfcctl safe-stop --reason TELEMETRY_STALE`。
    - 任一故障位非零：执行安全停机，原因使用 `PFC_FAULT_0xNNNN` 或 `LLC_FAULT_0xNNNN`。
    - 任一状态为 `Err`：执行安全停机，原因使用 `PFC_STATE_ERR` 或 `LLC_STATE_ERR`。
+   - 受限遥测且状态/故障正常：保持，不发送降额或启动命令，报告缺失字段。
    - LLC MOS 或二极管温度 `>=90°C`：执行安全停机，原因使用 `LLC_OVER_TEMPERATURE`。
    - LLC MOS 或二极管温度在 `80°C` 到 `<90°C`，且两级均为 `Run`、无故障、输出已使能：请求 `80%` 降额，原因使用 `LLC_TEMPERATURE_DERATE`。
    - 状态为 `Init/Wait/Rise` 且无故障：保持，不发送控制命令，说明当前过渡状态。

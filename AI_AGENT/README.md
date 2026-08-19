@@ -58,7 +58,9 @@ pfcctl safe-stop --reason <REASON_CODE>
 
 1. `DSP/LLC/ISR2.c::SlowP()` 中 `CANLost()` 当前被注释，不能把 DSP 端 CAN 超时保护视为已启用。STM32 网关必须保留独立心跳超时和安全停机。
 2. PFC 当前 SCI 遥测主要包含状态、故障、AC 电压和输入电流；母线电压及 PFC 温度需要 STM32/ADC 或扩展 DSP 遥测提供。
-3. `pfcctl` 尚未实现，所以当前 Skill 可以审查但还不能完成真实工具调用。
+3. ESP32 侧已在 `ESP32/openvela_overlay/apps/system/pfcctl/` 实现 UART v1 的
+   状态读取和安全停机。协议尚无 AC/母线电压、温度、当前参考值和独立输出使能
+   反馈，因此自动降额仍会安全拒绝，完整守护闭环尚未就绪。
 4. Skill 本身不会主动唤醒 Agent；后续还需周期任务或事件守护进程触发状态检查，才能形成比赛要求的主动闭环。
 
 ## 验收用例

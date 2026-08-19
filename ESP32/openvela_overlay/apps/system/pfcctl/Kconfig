@@ -1,0 +1,33 @@
+config SYSTEM_PFCCTL
+	tristate "ESP32-S3-EYE PFC/LLC gateway client"
+	default n
+	depends on SERIAL_TERMIOS
+	---help---
+		Build the restricted pfcctl UART client used to read the STM32
+		gateway and request a fail-safe stop. It never writes DSP PWM,
+		protection thresholds, raw CAN frames, ARM tokens, or fault reset.
+
+if SYSTEM_PFCCTL
+
+config SYSTEM_PFCCTL_PROGNAME
+	string "Program name"
+	default "pfcctl"
+
+config SYSTEM_PFCCTL_PRIORITY
+	int "Task priority"
+	default 100
+
+config SYSTEM_PFCCTL_STACKSIZE
+	int "Task stack size"
+	default 4096
+
+config SYSTEM_PFCCTL_DEVICE
+	string "STM32 UART device"
+	default "/dev/ttyS0"
+
+config SYSTEM_PFCCTL_TIMEOUT_MS
+	int "UART response timeout in milliseconds"
+	range 100 10000
+	default 1200
+
+endif
