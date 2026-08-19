@@ -1,0 +1,15 @@
+############################################################################
+# SPDX-License-Identifier: Apache-2.0
+############################################################################
+
+include $(TOPDIR)/Make.defs
+
+CSRCS = stm32_boot.c stm32_bringup.c
+
+ifeq ($(CONFIG_STM32_CAN_CHARDRIVER),y)
+CSRCS += stm32_can.c
+endif
+
+DEPPATH += --dep-path board
+VPATH += :board
+CFLAGS += ${INCDIR_PREFIX}$(TOPDIR)$(DELIM)arch$(DELIM)$(CONFIG_ARCH)$(DELIM)src$(DELIM)board$(DELIM)board

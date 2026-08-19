@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: Apache-2.0
+
+if ARCH_BOARD_STM32F407ZG_PFCLLC
+
+config STM32F407ZG_PFCLLC_CAN_STANDBY
+	bool "Board controls an external CAN transceiver standby pin"
+	default n
+	help
+	  Leave this disabled unless the board schematic confirms a GPIO-connected
+	  STB/EN pin. PA11 and PA12 are always configured by the CAN1 driver.
+
+endif

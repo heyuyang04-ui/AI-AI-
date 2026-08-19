@@ -1,0 +1,32 @@
+{
+  "serial": {
+    "poll_interval_ms": 500,
+    "response_timeout_ms": 350,
+    "max_retries": 2
+  },
+  "mimo": {
+    "enabled": true,
+    "base_url": "https://token-plan-cn.xiaomimimo.com/v1",
+    "model": "mimo-v2.5-pro",
+    "request_interval_ms": 5000,
+    "request_timeout_ms": 10000,
+    "max_completion_tokens": 512,
+    "temperature": 0.1
+  },
+  "safety": {
+    "telemetry_timeout_ms": 1500,
+    "pfc_temperature_derate_c": null,
+    "pfc_temperature_trip_c": null,
+    "llc_temperature_derate_c": null,
+    "llc_temperature_trip_c": null,
+    "pfc_bus_voltage_min_v": null,
+    "pfc_bus_voltage_max_v": null,
+    "llc_output_voltage_max_v": null,
+    "llc_output_current_max_a": null
+  },
+  "control": {
+    "mode": "advisory_only",
+    "allow_auto_start": false,
+    "allow_auto_derate": false
+  }
+}
